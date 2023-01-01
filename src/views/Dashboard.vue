@@ -40,7 +40,7 @@
     const store = useStore()
     const router = useRouter()
   
-    auth.onAuthStateChanged(user => {
+    auth.onIdTokenChanged(user => {
       store.dispatch("fetchUser", user);
     });
   
