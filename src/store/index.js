@@ -68,7 +68,8 @@ const store = createStore({
 });
 
 const unsub = onAuthStateChanged(auth, (user) => {
-  store.commit('SET_LOGGED_IN', true);
+  const userLoggedIn = (user) ? true : false;
+  store.commit('SET_LOGGED_IN', userLoggedIn);
   store.commit('SET_USER', user);
   unsub();
 })

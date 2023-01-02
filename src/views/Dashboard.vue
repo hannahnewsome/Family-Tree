@@ -9,6 +9,7 @@
             <div class="card-body">
               <div class="alert alert-success" role="alert">
               You are logged in!
+              <span v-if="user.data.emailVerified">Congrats, your email is verified</span>
               <div class="my-4">
                     <button  @click.prevent="signOut" class="btn btn-primary">Log Out</button>
               </div>
