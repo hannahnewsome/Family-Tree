@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, onAuthStateChanged } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, onAuthStateChanged, getAuth, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../firebaseConfig'
 
 const store = createStore({
@@ -27,8 +27,12 @@ const store = createStore({
         const response = await createUserWithEmailAndPassword(auth, email, password)
         if (response) {
             context.commit('SET_USER', response.user)
-            console.log(name);
             updateProfile(response.user, {displayName: name})
+            const auth = getAuth();
+              sendEmailVerification(auth.currentUser)
+                .then(() => {
+                  console.log('success');
+                });
         } else {
             throw new Error('Unable to register user')
         }
@@ -53,10 +57,7 @@ const store = createStore({
   async fetchUser(context ,user) {
     context.commit("SET_LOGGED_IN", user !== null);
     if (user) {
-      context.commit("SET_USER", {
-        displayName: user.displayName,
-        email: user.email
-      });
+      context.commit("SET_USER", user);
     } else {
       context.commit("SET_USER", null);
     }
