@@ -5,6 +5,7 @@
           <div class="card">
             <div class="card-header">Login</div>
             <div class="card-body">
+                Logged in as {{ user.data.email }}
               <div v-if="error" class="alert alert-danger">{{error}}</div>
               <form action="#"  @submit.prevent="Login">
                 <div class="form-group row">
@@ -56,7 +57,9 @@
   import { ref } from 'vue'
   import { useStore } from 'vuex'
   import { useRouter } from 'vue-router'
+  import { computed } from 'vue'
   
+
   export default {
     name: "LoginComponent",
       setup() {
@@ -79,7 +82,9 @@
           error.value = err.message
         }
       }
-      return { Login, email, password, error }
+      return { Login, email, password, error, user: computed(() => {
+        return store.state.user
+      }) }
     }
   };
   </script>

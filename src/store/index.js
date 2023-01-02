@@ -1,8 +1,8 @@
 import { createStore } from 'vuex'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebaseConfig'
 
-export default createStore({
+const store = createStore({
   state: {
     user: {
       loggedIn: false,
@@ -64,4 +64,12 @@ export default createStore({
 },
   modules: {
   }
+});
+
+const unsub = onAuthStateChanged(auth, (user) => {
+  store.commit('SET_LOGGED_IN', true);
+  store.commit('SET_USER', user);
+  unsub();
 })
+
+export default store
