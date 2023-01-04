@@ -6,7 +6,8 @@ const store = createStore({
   state: {
     user: {
       loggedIn: false,
-      data: null
+      data: null,
+      userVerified: false
     }
   },
   getters: {
@@ -20,6 +21,9 @@ const store = createStore({
     },
     SET_USER(state, data) {
       state.user.data = data;
+    },
+    SET_USER_VERIFIED(state, data) {
+      state.user.userVerified = data;
     }
   },
   actions: {
@@ -41,9 +45,15 @@ const store = createStore({
     async logIn(context, { email, password }){
       const response = await signInWithEmailAndPassword(auth, email, password)
       if (response) {
+        if(!response.user.emailVerified){
+          context.commit('SET_USER_VERIFIED', false)
+          context.commit("SET_LOGGED_IN", false)
           context.commit('SET_USER', response.user)
-          context.commit("SET_LOGGED_IN", response.user !== null);
-          console.log(response.user);
+        } else {
+          context.commit('SET_USER', response.user)
+          context.commit("SET_LOGGED_IN", response.user !== null)
+          context.commit('SET_USER_VERIFIED', true)
+        }
       } else {
           throw new Error('login failed')
       }
